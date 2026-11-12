@@ -1,153 +1,215 @@
-<main class="page" [class.dark]="dark()">
-  <header class="intro">
-    <h1>ngx-callout</h1>
-    <p class="tagline">
-      Think of <code>&lt;ngx-callout&gt;</code> as a coloured notice box: an icon, a title, a line of text, and
-      anything else you put inside. Pick a type and it picks the colour.
+<!--
+  Demo page built with Bootstrap 5.3 (loaded from the CDN in index.html).
+  The two --ngx-callout-* variables let the callouts follow Bootstrap's light and dark modes.
+-->
+<main
+  class="container py-5"
+  style="max-width: 1100px; --ngx-callout-surface: var(--bs-body-bg); --ngx-callout-ink: var(--bs-body-color)"
+>
+  <header class="mb-5">
+    <h1 class="fw-bold mb-2">ngx-callout</h1>
+    <p class="fs-5 mb-3" style="max-width: 62ch">
+      Think of <code class="bg-body-secondary text-primary px-2 rounded">&lt;ngx-callout&gt;</code> as a coloured
+      notice box: an icon, a title, a line of text, and anything else you put inside. Pick a type and it picks the
+      colour.
     </p>
-    <ul class="types" aria-label="Callout types">
+    <ul class="list-unstyled d-flex flex-wrap gap-2 mb-3" aria-label="Callout types">
       <li class="pill info">Info</li>
       <li class="pill warning">Warning</li>
       <li class="pill error">Error</li>
       <li class="pill success">Success</li>
     </ul>
-    <p class="lede">Change the settings on the left to see what each input does. The code updates as you go.</p>
+    <p class="text-body-secondary mb-0">
+      Change the settings on the left to see what each input does. The code updates as you go.
+    </p>
   </header>
 
-  <section class="playground" aria-label="Playground">
-    <form class="panel form" (submit)="$event.preventDefault()" aria-label="Callout settings">
-      <fieldset>
-        <legend>Content</legend>
+  <section class="row g-4 align-items-start" aria-label="Playground">
+    <!-- Settings -->
+    <div class="col-lg-4">
+      <form class="card shadow-sm" (submit)="$event.preventDefault()" aria-label="Callout settings">
+        <div class="card-body vstack gap-4">
+          <fieldset class="vstack gap-2">
+            <legend class="small fw-semibold text-uppercase text-body-secondary mb-1">Content</legend>
 
-        <label class="field" for="f-state">
-          <span>type</span>
-          <select id="f-state" name="state" [ngModel]="state()" (ngModelChange)="onStateChange($event)">
-            @for (opt of stateOptions; track opt.value) {
-              <option [ngValue]="opt.value">{{ opt.label }}</option>
+            <div>
+              <label class="form-label font-monospace small mb-1" for="f-state">type</label>
+              <select
+                id="f-state"
+                name="state"
+                class="form-select form-select-sm"
+                [ngModel]="state()"
+                (ngModelChange)="onStateChange($event)"
+              >
+                @for (opt of stateOptions; track opt.value) {
+                  <option [ngValue]="opt.value">{{ opt.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label font-monospace small mb-1" for="f-heading">heading</label>
+              <input id="f-heading" name="heading" type="text" class="form-control form-control-sm" [(ngModel)]="heading" />
+            </div>
+
+            <div>
+              <label class="form-label font-monospace small mb-1" for="f-subheading">subheading</label>
+              <input id="f-subheading" name="subheading" type="text" class="form-control form-control-sm" [(ngModel)]="subheading" />
+            </div>
+
+            <div>
+              <label class="form-label font-monospace small mb-1" for="f-content">content</label>
+              <div class="form-check mb-1">
+                <input id="f-show-content" name="showContent" type="checkbox" class="form-check-input" [(ngModel)]="showContent" />
+                <label class="form-check-label font-monospace small" for="f-show-content">(ng-content)</label>
+              </div>
+              <textarea
+                id="f-content"
+                name="content"
+                rows="3"
+                class="form-control form-control-sm"
+                [(ngModel)]="content"
+                [disabled]="!showContent()"
+              ></textarea>
+            </div>
+          </fieldset>
+
+          <fieldset class="vstack gap-2">
+            <legend class="small fw-semibold text-uppercase text-body-secondary mb-1">Style</legend>
+
+            <div class="form-check mb-0">
+              <input id="f-icon" name="showIcon" type="checkbox" class="form-check-input" [(ngModel)]="showIcon" />
+              <label class="form-check-label font-monospace small" for="f-icon">showIcon</label>
+            </div>
+            <div class="form-check mb-0">
+              <input id="f-outline" name="outline" type="checkbox" class="form-check-input" [(ngModel)]="outline" />
+              <label class="form-check-label font-monospace small" for="f-outline">
+                outline <span class="text-body-secondary">· border on all sides</span>
+              </label>
+            </div>
+            <div class="form-check mb-0">
+              <input id="f-rounded" name="rounded" type="checkbox" class="form-check-input" [(ngModel)]="rounded" />
+              <label class="form-check-label font-monospace small" for="f-rounded">
+                rounded <span class="text-body-secondary">· 5px corners</span>
+              </label>
+            </div>
+            <div class="form-check mb-0">
+              <input id="f-custom-color" name="customColor" type="checkbox" class="form-check-input" [(ngModel)]="customColor" />
+              <label class="form-check-label font-monospace small" for="f-custom-color">
+                colors <span class="text-body-secondary">· custom accent</span>
+              </label>
+            </div>
+            @if (customColor()) {
+              <div>
+                <label class="form-label font-monospace small mb-1" for="f-accent">accent</label>
+                <div class="d-flex align-items-center gap-2">
+                  <input id="f-accent" name="accent" type="color" class="form-control form-control-color" [(ngModel)]="accent" />
+                  <code class="text-body">{{ accent() }}</code>
+                </div>
+              </div>
             }
-          </select>
-        </label>
+          </fieldset>
 
-        <label class="field" for="f-heading">
-          <span>heading</span>
-          <input id="f-heading" name="heading" type="text" [(ngModel)]="heading" />
-        </label>
+          <fieldset class="vstack gap-2">
+            <legend class="small fw-semibold text-uppercase text-body-secondary mb-1">Accessibility</legend>
 
-        <label class="field" for="f-subheading">
-          <span>subheading</span>
-          <input id="f-subheading" name="subheading" type="text" [(ngModel)]="subheading" />
-        </label>
+            <div>
+              <label class="form-label font-monospace small mb-1" for="f-id">id</label>
+              <input id="f-id" name="calloutId" type="text" class="form-control form-control-sm" [(ngModel)]="calloutId" />
+            </div>
+            <div>
+              <label class="form-label font-monospace small mb-1" for="f-aria">
+                ariaLabel <span class="text-body-secondary">(empty = automatic)</span>
+              </label>
+              <input
+                id="f-aria"
+                name="ariaLabel"
+                type="text"
+                class="form-control form-control-sm"
+                [(ngModel)]="ariaLabel"
+                placeholder="e.g. Security notice"
+              />
+            </div>
+          </fieldset>
 
-        <label class="field" for="f-content">
-          <span>content <small>(ng-content)</small></span>
-          <textarea id="f-content" name="content" rows="3" [(ngModel)]="content"></textarea>
-        </label>
-      </fieldset>
+          <fieldset class="vstack gap-2">
+            <legend class="small fw-semibold text-uppercase text-body-secondary mb-1">Page</legend>
+            <div class="form-check mb-0">
+              <input id="f-dark" name="dark" type="checkbox" class="form-check-input" [(ngModel)]="dark" />
+              <label class="form-check-label font-monospace small" for="f-dark">
+                Dark mode <span class="text-body-secondary">· Bootstrap data-bs-theme</span>
+              </label>
+            </div>
+          </fieldset>
 
-      <fieldset>
-        <legend>Style</legend>
-
-        <label class="check" for="f-icon">
-          <input id="f-icon" name="showIcon" type="checkbox" [(ngModel)]="showIcon" />
-          <span>showIcon</span>
-        </label>
-        <label class="check" for="f-outline">
-          <input id="f-outline" name="outline" type="checkbox" [(ngModel)]="outline" />
-          <span>outline <small>border on all sides</small></span>
-        </label>
-        <label class="check" for="f-rounded">
-          <input id="f-rounded" name="rounded" type="checkbox" [(ngModel)]="rounded" />
-          <span>rounded <small>5px corners</small></span>
-        </label>
-        <label class="check" for="f-custom-color">
-          <input id="f-custom-color" name="customColor" type="checkbox" [(ngModel)]="customColor" />
-          <span>colors <small>custom accent</small></span>
-        </label>
-        @if (customColor()) {
-          <label class="field color" for="f-accent">
-            <span>accent</span>
-            <span class="color-row">
-              <input id="f-accent" name="accent" type="color" [(ngModel)]="accent" />
-              <code>{{ accent() }}</code>
-            </span>
-          </label>
-        }
-      </fieldset>
-
-      <fieldset>
-        <legend>Accessibility</legend>
-
-        <label class="field" for="f-id">
-          <span>id</span>
-          <input id="f-id" name="calloutId" type="text" [(ngModel)]="calloutId" />
-        </label>
-        <label class="field" for="f-aria">
-          <span>ariaLabel <small>(empty = automatic)</small></span>
-          <input id="f-aria" name="ariaLabel" type="text" [(ngModel)]="ariaLabel" placeholder="e.g. Security notice" />
-        </label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Page</legend>
-        <label class="check" for="f-dark">
-          <input id="f-dark" name="dark" type="checkbox" [(ngModel)]="dark" />
-          <span>Dark surface <small>sets --ngx-callout-surface / -ink</small></span>
-        </label>
-      </fieldset>
-
-      <button type="button" class="btn ghost" (click)="reset()">Reset</button>
-    </form>
-
-    <div class="output">
-      <div class="panel preview" aria-label="Preview">
-        <ngx-callout
-          [id]="calloutId() || 'my-callout'"
-          [type]="state()"
-          [heading]="heading()"
-          [subheading]="subheading()"
-          [showIcon]="showIcon()"
-          [outline]="outline()"
-          [rounded]="rounded()"
-          [colors]="colors()"
-          [ariaLabel]="ariaLabel()"
-        >
-          {{ content() }}
-        </ngx-callout>
-      </div>
-
-      <div class="panel code-panel">
-        <div class="code-head">
-          <span>Template</span>
-          <button type="button" class="btn" (click)="copyCode()">{{ copied() ? 'Copied' : 'Copy' }}</button>
+          <div>
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="reset()">Reset</button>
+          </div>
         </div>
-        <pre><code>{{ code() }}</code></pre>
+      </form>
+    </div>
+
+    <!-- Preview and code -->
+    <div class="col-lg-8 sticky-lg-top" style="top: 1rem">
+      <div class="vstack gap-3">
+        <div class="card shadow-sm" aria-label="Preview">
+          <div class="card-body p-4">
+            <ngx-callout
+              [id]="calloutId() || 'my-callout'"
+              [type]="state()"
+              [heading]="heading()"
+              [subheading]="subheading()"
+              [showIcon]="showIcon()"
+              [outline]="outline()"
+              [rounded]="rounded()"
+              [colors]="colors()"
+              [ariaLabel]="ariaLabel()"
+            >
+              @if (showContent()) {{{ content() }}}
+            </ngx-callout>
+          </div>
+        </div>
+
+        <div class="card shadow-sm overflow-hidden">
+          <div class="card-header d-flex justify-content-between align-items-center py-2">
+            <span class="small fw-semibold text-uppercase text-body-secondary">Template</span>
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="copyCode()">
+              {{ copied() ? 'Copied' : 'Copy' }}
+            </button>
+          </div>
+          <pre class="mb-0 p-3 bg-body-tertiary small"><code class="text-body">{{ code() }}</code></pre>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="block" aria-labelledby="gallery-title">
-    <h2 id="gallery-title">All four states</h2>
-    <p class="hint">These follow the showIcon, outline and rounded settings above.</p>
-    <div class="gallery">
+  <section class="mt-5" aria-labelledby="gallery-title">
+    <h2 id="gallery-title" class="h4 fw-bold mb-1">All four types</h2>
+    <p class="small text-body-secondary mb-3">These follow the showIcon, outline and rounded settings above.</p>
+    <div class="row row-cols-1 row-cols-md-2 g-3">
       @for (item of gallery; track item.state) {
-        <ngx-callout
-          [id]="'gallery-' + item.state"
-          [type]="item.state"
-          [heading]="item.heading"
-          [subheading]="item.subheading"
-          [showIcon]="showIcon()"
-          [outline]="outline()"
-          [rounded]="rounded()"
-        />
+        <div class="col">
+          <ngx-callout
+            [id]="'gallery-' + item.state"
+            [type]="item.state"
+            [heading]="item.heading"
+            [subheading]="item.subheading"
+            [showIcon]="showIcon()"
+            [outline]="outline()"
+            [rounded]="rounded()"
+          />
+        </div>
       }
     </div>
   </section>
 
   <!-- Hidden for now; will be revisited later. -->
   @if (false) {
-  <section class="block" aria-labelledby="slots-title">
-    <h2 id="slots-title">Custom icon and heading</h2>
-    <p class="hint">Use <code>ngxCalloutIcon</code> and <code>ngxCalloutHeading</code> to project your own markup.</p>
+  <section class="mt-5" aria-labelledby="slots-title">
+    <h2 id="slots-title" class="h4 fw-bold mb-1">Custom icon and heading</h2>
+    <p class="small text-body-secondary mb-3">
+      Use <code>ngxCalloutIcon</code> and <code>ngxCalloutHeading</code> to project your own markup.
+    </p>
     <ngx-callout
       id="demo-slots"
       type="success"
@@ -160,7 +222,7 @@
         <path d="M12 2l3 6 6 .9-4.5 4.4 1 6.2L12 16.6 6.5 19.5l1-6.2L3 8.9 9 8z" />
       </svg>
       <span ngxCalloutHeading>Version <code>2.0</code> is out</span>
-      <ul>
+      <ul class="mb-0 mt-1">
         <li>Signal inputs</li>
         <li>CSS variable theming</li>
       </ul>
@@ -168,11 +230,11 @@
   </section>
   }
 
-  <footer class="footer">
-    <span>ngx-callout <code>v{{ version }}</code></span>
+  <footer class="border-top mt-5 pt-4 d-flex flex-wrap justify-content-center align-items-center gap-2 small text-body-secondary">
+    <span>ngx-callout <code class="text-body bg-body-secondary px-2 rounded">v{{ version }}</code></span>
     <span aria-hidden="true">·</span>
     <span>MIT license</span>
     <span aria-hidden="true">·</span>
-    <a href="https://github.com/vishaalsharmaa/ngx-callout" target="_blank" rel="noopener">GitHub</a>
+    <a class="link-primary text-decoration-none" href="https://github.com/vishaalsharmaa/ngx-callout" target="_blank" rel="noopener">GitHub</a>
   </footer>
 </main>

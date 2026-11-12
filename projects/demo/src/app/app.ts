@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import libPackage from '../../../ngx-callout/package.json';
 import {
@@ -15,6 +15,14 @@ const DEFAULT_ACCENTS: Record<MessageState, string> = {
   [MessageState.Warning]: '#d4a017',
   [MessageState.Error]: '#d43c3c',
   [MessageState.Success]: '#2f9e44',
+};
+
+/** What the playground shows when the page opens, and after Reset. */
+const PLAYGROUND_START: { type: MessageState; heading: string; subheading: string; content: string } = {
+  type: MessageState.Success,
+  heading: 'Callouts made easy',
+  subheading: 'One tag, four types, zero dependencies.',
+  content: 'Drop <ngx-callout> into any template and get an accessible, themeable notice box in seconds.',
 };
 
 const ENUM_KEYS = Object.fromEntries(
@@ -36,16 +44,18 @@ export class App {
     label: `MessageState.${ENUM_KEYS[value]}`,
   }));
 
-  // Form fields
-  protected readonly state = signal<MessageState>(MessageState.Warning);
-  protected readonly heading = signal('If the SRI hashes differ, don’t use that CDN.');
-  protected readonly subheading = signal('A changed hash means someone else modified the file.');
-  protected readonly content = signal('Check the hash on the official download page before you add the file.');
+  // Form fields (start values come from PLAYGROUND_START, which Reset also uses)
+  protected readonly state = signal<MessageState>(PLAYGROUND_START.type);
+  protected readonly heading = signal(PLAYGROUND_START.heading);
+  protected readonly subheading = signal(PLAYGROUND_START.subheading);
+  protected readonly content = signal(PLAYGROUND_START.content);
+  /** Whether the content text is projected into the callout through ng-content. */
+  protected readonly showContent = signal(true);
   protected readonly showIcon = signal(true);
   protected readonly outline = signal(false);
   protected readonly rounded = signal(false);
   protected readonly customColor = signal(false);
-  protected readonly accent = signal(DEFAULT_ACCENTS[MessageState.Warning]);
+  protected readonly accent = signal(DEFAULT_ACCENTS[PLAYGROUND_START.type]);
   protected readonly calloutId = signal('my-callout');
   protected readonly ariaLabel = signal('');
   protected readonly dark = signal(false);
@@ -55,6 +65,13 @@ export class App {
   );
 
   protected readonly copied = signal(false);
+
+  constructor() {
+    // Bootstrap 5.3 colour mode: switches the whole page between light and dark.
+    effect(() => {
+      document.documentElement.setAttribute('data-bs-theme', this.dark() ? 'dark' : 'light');
+    });
+  }
 
   /** The Angular template for the current form values. */
   protected readonly code = computed(() => {
@@ -70,7 +87,7 @@ export class App {
     if (this.ariaLabel()) lines.push(`ariaLabel="${attr(this.ariaLabel())}"`);
 
     const open = `<ngx-callout\n  ${lines.join('\n  ')}`;
-    const body = this.content().trim();
+    const body = this.showContent() ? this.content().trim() : '';
     return body ? `${open}>\n  ${body}\n</ngx-callout>` : `${open} />`;
   });
 
@@ -81,15 +98,16 @@ export class App {
   }
 
   protected reset(): void {
-    this.state.set(MessageState.Warning);
-    this.heading.set('If the SRI hashes differ, don’t use that CDN.');
-    this.subheading.set('A changed hash means someone else modified the file.');
-    this.content.set('Check the hash on the official download page before you add the file.');
+    this.state.set(PLAYGROUND_START.type);
+    this.heading.set(PLAYGROUND_START.heading);
+    this.subheading.set(PLAYGROUND_START.subheading);
+    this.content.set(PLAYGROUND_START.content);
+    this.showContent.set(true);
     this.showIcon.set(true);
     this.outline.set(false);
     this.rounded.set(false);
     this.customColor.set(false);
-    this.accent.set(DEFAULT_ACCENTS[MessageState.Warning]);
+    this.accent.set(DEFAULT_ACCENTS[PLAYGROUND_START.type]);
     this.calloutId.set('my-callout');
     this.ariaLabel.set('');
   }
