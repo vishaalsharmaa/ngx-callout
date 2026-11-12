@@ -1,0 +1,113 @@
+// Theming
+// -------
+// Public custom properties (set them on :root, a wrapper, or a single <ngx-callout>):
+//
+//   --ngx-callout-{info|warning|error|success}-accent   base color per type
+//   --ngx-callout-accent      base color for every type (overrides the per-type ones)
+//   --ngx-callout-bg / -border / -text / -heading / -icon   fine-tune one shade
+//   --ngx-callout-surface     page color the background is mixed into (default #fff)
+//   --ngx-callout-ink         text color the text/icon are mixed into (default #1b2230)
+//   --ngx-callout-padding / -border-width / -gap / -font-size
+//   --ngx-callout-radius          corner radius when `rounded` is on (default 5px)
+//   --ngx-callout-outline-width   side/top/bottom border width when `outline` is on (default 1px)
+//
+// For dark mode, set --ngx-callout-surface and --ngx-callout-ink to your dark
+// theme's background and text colors; every shade follows.
+//
+// Private --_* properties hold the resolved values so the public ones can be
+// inherited from an ancestor without this stylesheet shadowing them.
+
+:host {
+  --_ink: var(--ngx-callout-ink, #1b2230);
+  --_surface: var(--ngx-callout-surface, #ffffff);
+  --_accent: var(--ngx-callout-accent, var(--_type-accent));
+  --_bg: var(--ngx-callout-bg, color-mix(in srgb, var(--_accent) 14%, var(--_surface)));
+  --_border: var(--ngx-callout-border, var(--_accent));
+  --_text: var(--ngx-callout-text, color-mix(in srgb, var(--_accent) 35%, var(--_ink)));
+  --_heading: var(--ngx-callout-heading, var(--_text));
+  --_icon: var(--ngx-callout-icon, color-mix(in srgb, var(--_accent) 80%, var(--_ink)));
+
+  --_type-accent: var(--ngx-callout-info-accent, #1689ad);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ngx-callout-gap, 12px);
+  box-sizing: border-box;
+  padding: var(--ngx-callout-padding, 14px 18px 14px 14px);
+  background: var(--_bg);
+  color: var(--_text);
+  border-left: var(--ngx-callout-border-width, 5px) solid var(--_border);
+  font-size: var(--ngx-callout-font-size, 0.95rem);
+  line-height: 1.55;
+}
+
+:host(.ngx-callout--outline) {
+  border: var(--ngx-callout-outline-width, 1px) solid var(--_border);
+  border-left-width: var(--ngx-callout-border-width, 5px);
+}
+
+:host(.ngx-callout--rounded) {
+  border-radius: var(--ngx-callout-radius, 5px);
+}
+
+:host([data-type='warning']) {
+  --_type-accent: var(--ngx-callout-warning-accent, #d4a017);
+}
+:host([data-type='error']) {
+  --_type-accent: var(--ngx-callout-error-accent, #d43c3c);
+}
+:host([data-type='success']) {
+  --_type-accent: var(--ngx-callout-success-accent, #2f9e44);
+}
+
+.ngx-callout__icon {
+  flex: none;
+  display: inline-flex;
+  width: 1.4em;
+  height: 1.4em;
+  margin-top: 0.05em;
+  color: var(--_icon);
+
+  // ::ng-deep so a projected custom icon gets the same sizing
+  ::ng-deep svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+.ngx-callout__body {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ngx-callout__heading {
+  color: var(--_heading);
+  font-weight: 700;
+  font-size: 1.07em;
+  line-height: 1.4;
+}
+
+.ngx-callout__subheading {
+  font-size: 0.95em;
+  opacity: 0.85;
+}
+
+.ngx-callout__content {
+  &:empty {
+    display: none;
+  }
+
+  ::ng-deep a {
+    color: inherit;
+    text-underline-offset: 2px;
+  }
+}
+
+.ngx-callout__heading + .ngx-callout__content,
+.ngx-callout__subheading + .ngx-callout__content {
+  margin-top: 4px;
+}

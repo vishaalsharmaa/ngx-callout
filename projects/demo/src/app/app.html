@@ -1,0 +1,170 @@
+<main class="page" [class.dark]="dark()">
+  <header class="intro">
+    <h1>ngx-callout</h1>
+    <p class="tagline">
+      Think of <code>&lt;ngx-callout&gt;</code> as a coloured notice box: an icon, a title, a line of text, and
+      anything else you put inside. Pick a type and it picks the colour.
+    </p>
+    <ul class="types" aria-label="Callout types">
+      <li class="pill info">Info</li>
+      <li class="pill warning">Warning</li>
+      <li class="pill error">Error</li>
+      <li class="pill success">Success</li>
+    </ul>
+    <p class="lede">Change the settings on the left to see what each input does. The code updates as you go.</p>
+  </header>
+
+  <section class="playground" aria-label="Playground">
+    <form class="panel form" (submit)="$event.preventDefault()" aria-label="Callout settings">
+      <fieldset>
+        <legend>Content</legend>
+
+        <label class="field" for="f-state">
+          <span>type</span>
+          <select id="f-state" name="state" [ngModel]="state()" (ngModelChange)="onStateChange($event)">
+            @for (opt of stateOptions; track opt.value) {
+              <option [ngValue]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="field" for="f-heading">
+          <span>heading</span>
+          <input id="f-heading" name="heading" type="text" [(ngModel)]="heading" />
+        </label>
+
+        <label class="field" for="f-subheading">
+          <span>subheading</span>
+          <input id="f-subheading" name="subheading" type="text" [(ngModel)]="subheading" />
+        </label>
+
+        <label class="field" for="f-content">
+          <span>content <small>(ng-content)</small></span>
+          <textarea id="f-content" name="content" rows="3" [(ngModel)]="content"></textarea>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Style</legend>
+
+        <label class="check" for="f-icon">
+          <input id="f-icon" name="showIcon" type="checkbox" [(ngModel)]="showIcon" />
+          <span>showIcon</span>
+        </label>
+        <label class="check" for="f-outline">
+          <input id="f-outline" name="outline" type="checkbox" [(ngModel)]="outline" />
+          <span>outline <small>border on all sides</small></span>
+        </label>
+        <label class="check" for="f-rounded">
+          <input id="f-rounded" name="rounded" type="checkbox" [(ngModel)]="rounded" />
+          <span>rounded <small>5px corners</small></span>
+        </label>
+        <label class="check" for="f-custom-color">
+          <input id="f-custom-color" name="customColor" type="checkbox" [(ngModel)]="customColor" />
+          <span>colors <small>custom accent</small></span>
+        </label>
+        @if (customColor()) {
+          <label class="field color" for="f-accent">
+            <span>accent</span>
+            <span class="color-row">
+              <input id="f-accent" name="accent" type="color" [(ngModel)]="accent" />
+              <code>{{ accent() }}</code>
+            </span>
+          </label>
+        }
+      </fieldset>
+
+      <fieldset>
+        <legend>Accessibility</legend>
+
+        <label class="field" for="f-id">
+          <span>id</span>
+          <input id="f-id" name="calloutId" type="text" [(ngModel)]="calloutId" />
+        </label>
+        <label class="field" for="f-aria">
+          <span>ariaLabel <small>(empty = automatic)</small></span>
+          <input id="f-aria" name="ariaLabel" type="text" [(ngModel)]="ariaLabel" placeholder="e.g. Security notice" />
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Page</legend>
+        <label class="check" for="f-dark">
+          <input id="f-dark" name="dark" type="checkbox" [(ngModel)]="dark" />
+          <span>Dark surface <small>sets --ngx-callout-surface / -ink</small></span>
+        </label>
+      </fieldset>
+
+      <button type="button" class="btn ghost" (click)="reset()">Reset</button>
+    </form>
+
+    <div class="output">
+      <div class="panel preview" aria-label="Preview">
+        <ngx-callout
+          [id]="calloutId() || 'my-callout'"
+          [type]="state()"
+          [heading]="heading()"
+          [subheading]="subheading()"
+          [showIcon]="showIcon()"
+          [outline]="outline()"
+          [rounded]="rounded()"
+          [colors]="colors()"
+          [ariaLabel]="ariaLabel()"
+        >
+          {{ content() }}
+        </ngx-callout>
+      </div>
+
+      <div class="panel code-panel">
+        <div class="code-head">
+          <span>Template</span>
+          <button type="button" class="btn" (click)="copyCode()">{{ copied() ? 'Copied' : 'Copy' }}</button>
+        </div>
+        <pre><code>{{ code() }}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="gallery-title">
+    <h2 id="gallery-title">All four states</h2>
+    <p class="hint">These follow the showIcon, outline and rounded settings above.</p>
+    <div class="gallery">
+      @for (item of gallery; track item.state) {
+        <ngx-callout
+          [id]="'gallery-' + item.state"
+          [type]="item.state"
+          [heading]="item.heading"
+          [subheading]="item.subheading"
+          [showIcon]="showIcon()"
+          [outline]="outline()"
+          [rounded]="rounded()"
+        />
+      }
+    </div>
+  </section>
+
+  <!-- Hidden for now; will be revisited later. -->
+  @if (false) {
+  <section class="block" aria-labelledby="slots-title">
+    <h2 id="slots-title">Custom icon and heading</h2>
+    <p class="hint">Use <code>ngxCalloutIcon</code> and <code>ngxCalloutHeading</code> to project your own markup.</p>
+    <ngx-callout
+      id="demo-slots"
+      type="success"
+      ariaLabel="Release notes for version 2"
+      [showIcon]="showIcon()"
+      [outline]="outline()"
+      [rounded]="rounded()"
+    >
+      <svg ngxCalloutIcon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 2l3 6 6 .9-4.5 4.4 1 6.2L12 16.6 6.5 19.5l1-6.2L3 8.9 9 8z" />
+      </svg>
+      <span ngxCalloutHeading>Version <code>2.0</code> is out</span>
+      <ul>
+        <li>Signal inputs</li>
+        <li>CSS variable theming</li>
+      </ul>
+    </ngx-callout>
+  </section>
+  }
+</main>
