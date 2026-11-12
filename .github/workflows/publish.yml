@@ -1,0 +1,51 @@
+# Tests, builds and publishes the ngx-callout library to npm when a GitHub Release is published.
+#
+# Uses npm Trusted Publishing (OIDC), so no NPM_TOKEN secret is needed.
+# One-time setup on npmjs.com: package → Settings → Trusted Publisher → GitHub Actions,
+#   owner: vishaalsharmaa, repository: ngx-callout, workflow filename: publish.yml
+#
+# To release: bump "version" in projects/ngx-callout/package.json, push to main,
+# then publish a GitHub Release whose tag is "v<version>" (e.g. v0.2.0).
+
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test library
+        run: npm run test:lib
+
+      - name: Build library
+        run: npx ng build ngx-callout
+
+      - name: Check release tag matches library version
+        run: |
+          PKG=$(node -p "require('./projects/ngx-callout/package.json').version")
+          if [ "v$PKG" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::Release tag ${GITHUB_REF_NAME} does not match library version v$PKG"
+            exit 1
+          fi
+
+      - name: Publish
+        working-directory: dist/ngx-callout
+        run: npm publish --access public
