@@ -214,4 +214,4 @@ npm start            # demo app at http://localhost:4200
 
 ## License
 
-MIT
+[MIT](LICENSE) © 2026 Vishal Sharma
