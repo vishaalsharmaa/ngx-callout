@@ -12,6 +12,8 @@ Four types: 🔵 **Info** · 🟡 **Warning** · 🔴 **Error** · 🟢 **Succes
 
 Each one comes with a soft tinted background, a coloured bar on the left, and its own icon. Add an outline or rounded corners, swap in your brand colour, or turn the icon off.
 
+**[Live demo and playground →](https://vishaalsharmaa.github.io/ngx-callout/)**
+
 - 4 strongly typed callout types: `MessageState.Info`, `Warning`, `Error`, `Success`
 - Icons on by default, can be turned off per callout or app-wide
 - Every element has a stable `id`; the callout and icon have an `aria-label`

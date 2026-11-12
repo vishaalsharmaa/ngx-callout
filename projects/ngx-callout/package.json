@@ -1,7 +1,7 @@
 {
   "name": "ngx-callout",
   "version": "0.1.0",
-  "description": "Docs-style callout boxes for Angular with typed states, optional icons, and customizable colors.",
+  "description": "Docs-style callout boxes for Angular with typed callout types, optional icons, and customizable colors.",
   "keywords": [
     "angular",
     "callout",
@@ -11,6 +11,14 @@
     "component"
   ],
   "license": "MIT",
+  "homepage": "https://vishaalsharmaa.github.io/ngx-callout/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vishaalsharmaa/ngx-callout.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vishaalsharmaa/ngx-callout/issues"
+  },
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0"
