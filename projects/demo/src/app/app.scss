@@ -325,3 +325,32 @@ ngx-callout ul {
   margin: 4px 0 0;
   padding-left: 1.2em;
 }
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding-top: 24px;
+  border-top: 1px solid var(--page-line);
+  font-size: 13px;
+  color: var(--page-muted);
+
+  code {
+    font-size: 12px;
+    padding: 1px 6px;
+    border-radius: 5px;
+    background: var(--page-code);
+    color: var(--page-fg);
+  }
+
+  a {
+    color: var(--page-accent);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

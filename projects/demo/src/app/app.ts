@@ -1,5 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import libPackage from '../../../ngx-callout/package.json';
 import {
   CalloutColors,
   MessageState,
@@ -28,6 +29,8 @@ const ENUM_KEYS = Object.fromEntries(
 })
 export class App {
   protected readonly MessageState = MessageState;
+  /** Library version, read from projects/ngx-callout/package.json. */
+  protected readonly version = libPackage.version;
   protected readonly stateOptions = Object.values(MessageState).map((value) => ({
     value,
     label: `MessageState.${ENUM_KEYS[value]}`,
