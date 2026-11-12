@@ -18,6 +18,7 @@ Each one comes with a soft tinted background, a coloured bar on the left, and it
 - Icons on by default, can be turned off per callout or app-wide
 - Every element has a stable `id`; the callout and icon have an `aria-label`
 - Colors change through one `accent` value or individual shades
+- Responsive by default: fits any container width, wraps long URLs and words, and keeps projected images and code blocks inside the box
 - Standalone component, signal inputs, `OnPush`, no dependencies besides Angular
 
 ## Install

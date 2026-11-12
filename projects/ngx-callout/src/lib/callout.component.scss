@@ -39,6 +39,15 @@
   border-left: var(--ngx-callout-border-width, 5px) solid var(--_border);
   font-size: var(--ngx-callout-font-size, 0.95rem);
   line-height: 1.55;
+
+  // Responsive by default:
+  // - never wider than its container, and able to shrink inside grid/flex parents
+  //   (their items otherwise refuse to get narrower than the longest word)
+  // - long unbroken text (URLs, file paths, identifiers) wraps instead of spilling out
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word; // fallback for browsers without `anywhere`
+  overflow-wrap: anywhere;
 }
 
 :host(.ngx-callout--outline) {
@@ -104,6 +113,26 @@
   ::ng-deep a {
     color: inherit;
     text-underline-offset: 2px;
+  }
+
+  // Projected media never grows past the callout.
+  ::ng-deep img,
+  ::ng-deep video,
+  ::ng-deep canvas,
+  ::ng-deep iframe {
+    max-width: 100%;
+  }
+
+  ::ng-deep img,
+  ::ng-deep video {
+    height: auto;
+  }
+
+  // Code blocks keep their formatting and scroll sideways instead of overflowing.
+  ::ng-deep pre {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-wrap: normal;
   }
 }
 
