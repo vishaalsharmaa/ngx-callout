@@ -3,6 +3,8 @@
 **Beautiful, accessible callouts for Angular.** Info, warning, error, success, tip and important notices in one tag, with zero dependencies.
 
 [![npm version](https://img.shields.io/npm/v/ngx-callout?color=2f9e44)](https://www.npmjs.com/package/ngx-callout)
+[![npm downloads](https://img.shields.io/npm/dm/ngx-callout?color=8250df)](https://www.npmjs.com/package/ngx-callout)
+[![downloads in the last 18 months](https://img.shields.io/npm/d18m/ngx-callout?color=12a594)](https://www.npmjs.com/package/ngx-callout)
 [![license: MIT](https://img.shields.io/npm/l/ngx-callout?color=1689ad)](https://github.com/vishaalsharmaa/ngx-callout/blob/main/LICENSE)
 [![live demo](https://img.shields.io/badge/demo-live-d4a017)](https://vishaalsharmaa.github.io/ngx-callout/)
 
