@@ -58,7 +58,7 @@ export interface CalloutElementIds {
 export class NgxCallout {
   private readonly config = inject(NGX_CALLOUT_CONFIG);
 
-  /** Which of the four types to show (info, warning, error, success). Accepts the enum or its string value. */
+  /** Which type to show (info, warning, error, success, tip, important). Accepts the enum or its string value. */
   readonly type = input(MessageState.Info, { transform: toMessageState });
 
   /** Bold heading text. Leave empty to hide the heading. */

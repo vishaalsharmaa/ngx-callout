@@ -86,6 +86,8 @@ describe('NgxCallout', () => {
     [MessageState.Warning, 'note', 'Warning'],
     [MessageState.Error, 'alert', 'Error'],
     [MessageState.Success, 'note', 'Success'],
+    [MessageState.Tip, 'note', 'Tip'],
+    [MessageState.Important, 'note', 'Important'],
   ])('type %s sets role %s and icon label %s', async (state, role, label) => {
     const { fixture, el } = await render(HostComponent);
     fixture.componentInstance.state.set(state);
@@ -294,5 +296,19 @@ describe('provideCallout accordion options', () => {
     expect(el.classList.contains('ngx-callout--fit')).toBe(true);
     expect(el.classList.contains('ngx-callout--open')).toBe(true);
     expect(el.querySelector('.ngx-callout__toggle')?.getAttribute('aria-label')).toBe('Weniger anzeigen');
+  });
+});
+
+describe('icons', () => {
+  it('draws a different icon for each of the six types', async () => {
+    const { fixture, el } = await render(HostComponent);
+    const icons = new Set<string>();
+    for (const type of Object.values(MessageState)) {
+      fixture.componentInstance.state.set(type);
+      await fixture.whenStable();
+      icons.add(el.querySelector('.ngx-callout__icon svg')!.innerHTML);
+    }
+    expect(Object.values(MessageState)).toHaveLength(6);
+    expect(icons.size).toBe(6);
   });
 });

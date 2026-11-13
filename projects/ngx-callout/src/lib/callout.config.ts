@@ -29,6 +29,8 @@ export const DEFAULT_CALLOUT_LABELS: CalloutStateLabels = {
   [MessageState.Warning]: 'Warning',
   [MessageState.Error]: 'Error',
   [MessageState.Success]: 'Success',
+  [MessageState.Tip]: 'Tip',
+  [MessageState.Important]: 'Important',
 };
 
 export const DEFAULT_ACCORDION_LABELS: CalloutAccordionLabels = {

@@ -1,7 +1,7 @@
 {
   "name": "ngx-callout",
-  "version": "0.2.0",
-  "description": "Angular callout component for info, warning, error and success messages: accessible, responsive inline alerts and notice boxes with zero dependencies.",
+  "version": "0.3.0",
+  "description": "Angular callout component for info, warning, error, success, tip and important messages: accessible, responsive inline alerts and notice boxes with zero dependencies.",
   "keywords": [
     "angular",
     "angular-component",
@@ -21,6 +21,8 @@
     "warning",
     "error-message",
     "success-message",
+    "tip",
+    "important",
     "accessible",
     "a11y",
     "aria",

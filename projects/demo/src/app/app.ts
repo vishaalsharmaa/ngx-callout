@@ -15,13 +15,15 @@ const DEFAULT_ACCENTS: Record<MessageState, string> = {
   [MessageState.Warning]: '#d4a017',
   [MessageState.Error]: '#d43c3c',
   [MessageState.Success]: '#2f9e44',
+  [MessageState.Tip]: '#12a594',
+  [MessageState.Important]: '#8250df',
 };
 
 /** What the playground shows when the page opens, and after Reset. */
 const PLAYGROUND_START: { type: MessageState; heading: string; subheading: string; content: string } = {
   type: MessageState.Success,
   heading: 'Callouts made easy',
-  subheading: 'One tag, four types, zero dependencies.',
+  subheading: 'One tag, six types, zero dependencies.',
   content: 'Drop <ngx-callout> into any template and get an accessible, themeable notice box in seconds.',
 };
 
@@ -154,5 +156,7 @@ export class App {
     { state: MessageState.Warning, heading: 'Heads up', subheading: 'This API changes in v2' },
     { state: MessageState.Error, heading: 'Payment failed', subheading: 'Your card was declined' },
     { state: MessageState.Success, heading: 'You’re all set', subheading: 'ngx-callout is installed' },
+    { state: MessageState.Tip, heading: 'Pro tip', subheading: 'Set one accent colour and every shade follows' },
+    { state: MessageState.Important, heading: 'Important', subheading: 'Back up your data before upgrading' },
   ];
 }

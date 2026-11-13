@@ -2,7 +2,7 @@
 // -------
 // Public custom properties (set them on :root, a wrapper, or a single <ngx-callout>):
 //
-//   --ngx-callout-{info|warning|error|success}-accent   base color per type
+//   --ngx-callout-{info|warning|error|success|tip|important}-accent   base color per type
 //   --ngx-callout-accent      base color for every type (overrides the per-type ones)
 //   --ngx-callout-bg / -border / -text / -heading / -icon   fine-tune one shade
 //   --ngx-callout-surface     page color the background is mixed into (default #fff)
@@ -72,6 +72,12 @@
 }
 :host([data-type='success']) {
   --_type-accent: var(--ngx-callout-success-accent, #2f9e44);
+}
+:host([data-type='tip']) {
+  --_type-accent: var(--ngx-callout-tip-accent, #12a594);
+}
+:host([data-type='important']) {
+  --_type-accent: var(--ngx-callout-important-accent, #8250df);
 }
 
 .ngx-callout__icon {

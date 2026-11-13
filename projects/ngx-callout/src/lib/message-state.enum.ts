@@ -8,6 +8,8 @@ export enum MessageState {
   Warning = 'warning',
   Error = 'error',
   Success = 'success',
+  Tip = 'tip',
+  Important = 'important',
 }
 
 /**

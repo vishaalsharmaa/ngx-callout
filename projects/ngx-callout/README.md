@@ -1,6 +1,6 @@
 # ngx-callout
 
-**Beautiful, accessible callouts for Angular.** Info, warning, error and success notices in one tag, with zero dependencies.
+**Beautiful, accessible callouts for Angular.** Info, warning, error, success, tip and important notices in one tag, with zero dependencies.
 
 [![npm version](https://img.shields.io/npm/v/ngx-callout?color=2f9e44)](https://www.npmjs.com/package/ngx-callout)
 [![license: MIT](https://img.shields.io/npm/l/ngx-callout?color=1689ad)](https://github.com/vishaalsharmaa/ngx-callout/blob/main/LICENSE)
@@ -17,7 +17,7 @@
 Think of `<ngx-callout>` as a coloured notice box: an icon, a title, a line of text, and anything else you put inside. Pick a type and it picks the colour.
 
 ```html
-<ngx-callout type="success" heading="Callouts made easy" subheading="One tag, four types, zero dependencies.">
+<ngx-callout type="success" heading="Callouts made easy" subheading="One tag, six types, zero dependencies.">
   Drop it into any template and get an accessible, themeable notice box in seconds.
 </ngx-callout>
 ```
@@ -54,7 +54,7 @@ Change any input in a form and see the callout and its template code update as y
 
 ## Features
 
-- **Four strongly typed types**: `MessageState.Info`, `Warning`, `Error` and `Success`
+- **Six strongly typed types**: `MessageState.Info`, `Warning`, `Error`, `Success`, `Tip` and `Important`
 - **Icon, heading, sub-heading and any content** through `ng-content`
 - **Accessible**: ARIA roles and labels, and a stable `id` on every element
 - **Collapsible content** with an animated expand/collapse button
@@ -100,10 +100,12 @@ The `type` input also accepts the enum's string value, still type-checked: `type
 
 | Type | Enum | Use it for | Screen-reader role |
 | --- | --- | --- | --- |
-| 🔵 Info | `MessageState.Info` | Tips, notes and neutral information (default) | `note` |
+| 🔵 Info | `MessageState.Info` | Notes and neutral information (default) | `note` |
 | 🟡 Warning | `MessageState.Warning` | Things to be careful about | `note` |
 | 🔴 Error | `MessageState.Error` | Failures and blocking problems | `alert` |
 | 🟢 Success | `MessageState.Success` | Confirmations and completed actions | `note` |
+| 💡 Tip | `MessageState.Tip` | Helpful hints and best practices (teal, light-bulb icon) | `note` |
+| 🟣 Important | `MessageState.Important` | Key information readers must not miss (purple) | `note` |
 
 Each type has its own tinted background, coloured left bar and icon.
 
@@ -111,7 +113,7 @@ Each type has its own tinted background, coloured left bar and icon.
 
 | Input | Type | Default | Description |
 | --- | --- | --- | --- |
-| `type` | `MessageState` or `'info' \| 'warning' \| 'error' \| 'success'` | `MessageState.Info` | Sets the colours, icon and ARIA role. |
+| `type` | `MessageState` or `'info' \| 'warning' \| 'error' \| 'success' \| 'tip' \| 'important'` | `MessageState.Info` | Sets the colours, icon and ARIA role. |
 | `heading` | `string` | `''` | Bold heading. Hidden when empty. |
 | `subheading` | `string` | `''` | Lighter text under the heading. Hidden when empty. |
 | `showIcon` | `boolean` | `true` | Shows the type icon. |
@@ -257,6 +259,8 @@ Theme from CSS, without TypeScript:
   --ngx-callout-warning-accent: #f59e0b;
   --ngx-callout-error-accent: #be123c;
   --ngx-callout-success-accent: #15803d;
+  --ngx-callout-tip-accent: #0d9488;
+  --ngx-callout-important-accent: #7c3aed;
 
   --ngx-callout-radius: 8px; /* used when rounded is on */
   --ngx-callout-padding: 16px 20px;
