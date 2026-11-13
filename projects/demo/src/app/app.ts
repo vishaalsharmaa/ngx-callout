@@ -1,4 +1,4 @@
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, WritableSignal, computed, effect, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import libPackage from '../../../ngx-callout/package.json';
 import {
@@ -66,6 +66,10 @@ export class App {
 
   protected readonly copied = signal(false);
 
+  /** Shown in the navbar with a Copy button. */
+  protected readonly installCommand = 'npm i ngx-callout';
+  protected readonly installCopied = signal(false);
+
   constructor() {
     // Bootstrap 5.3 colour mode: switches the whole page between light and dark.
     effect(() => {
@@ -112,13 +116,22 @@ export class App {
     this.ariaLabel.set('');
   }
 
-  protected async copyCode(): Promise<void> {
+  protected copyCode(): Promise<void> {
+    return this.copyText(this.code(), this.copied);
+  }
+
+  protected copyInstall(): Promise<void> {
+    return this.copyText(this.installCommand, this.installCopied);
+  }
+
+  /** Copies text and shows "Copied" on the button for 1.5 seconds. */
+  private async copyText(text: string, done: WritableSignal<boolean>): Promise<void> {
     try {
-      await navigator.clipboard.writeText(this.code());
-      this.copied.set(true);
-      setTimeout(() => this.copied.set(false), 1500);
+      await navigator.clipboard.writeText(text);
+      done.set(true);
+      setTimeout(() => done.set(false), 1500);
     } catch {
-      this.copied.set(false);
+      done.set(false);
     }
   }
 

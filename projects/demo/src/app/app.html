@@ -2,6 +2,88 @@
   Demo page built with Bootstrap 5.3 (loaded from the CDN in index.html).
   The two --ngx-callout-* variables let the callouts follow Bootstrap's light and dark modes.
 -->
+<nav class="navbar sticky-top bg-body border-bottom shadow-sm py-2" aria-label="Main">
+  <div class="container flex-nowrap gap-3" style="max-width: 1100px">
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center gap-2 me-auto" style="min-width: 0" href="./" aria-label="ngx-callout home">
+      <span
+        class="d-inline-flex align-items-center justify-content-center rounded-3 bg-success flex-shrink-0"
+        style="width: 40px; height: 40px"
+        aria-hidden="true"
+      >
+        <!-- Logo: a tiny callout (accent bar + two lines of text) -->
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="4" width="18" height="16" rx="3" fill="#fff" fill-opacity="0.22" />
+          <rect x="3" y="4" width="3.5" height="16" rx="1.5" fill="#fff" />
+          <rect x="9" y="8.5" width="9" height="2.2" rx="1.1" fill="#fff" />
+          <rect x="9" y="13.3" width="6" height="2.2" rx="1.1" fill="#fff" fill-opacity="0.8" />
+        </svg>
+      </span>
+      <span class="d-flex flex-column lh-sm" style="min-width: 0">
+        <span class="font-monospace fw-semibold fs-5 text-body">ngx-callout</span>
+        <span class="small text-body-secondary d-none d-sm-inline text-truncate">Callouts for Angular</span>
+      </span>
+    </a>
+
+    <!-- Install command (hidden on small screens) -->
+    <div class="d-none d-md-flex align-items-center gap-2 border rounded-3 bg-body-tertiary ps-3 pe-1 py-1">
+      <code class="text-body-secondary small">{{ installCommand }}</code>
+      <button
+        type="button"
+        class="btn btn-sm btn-link text-body fw-semibold text-decoration-none"
+        (click)="copyInstall()"
+        [attr.aria-label]="'Copy ' + installCommand"
+      >
+        {{ installCopied() ? 'Copied' : 'Copy' }}
+      </button>
+    </div>
+
+    <!-- Links and theme -->
+    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+      <a
+        class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-1"
+        href="https://github.com/vishaalsharmaa/ngx-callout"
+        target="_blank"
+        rel="noopener"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+          />
+        </svg>
+        <span class="d-none d-sm-inline">GitHub</span>
+      </a>
+      <a
+        class="btn btn-outline-secondary btn-sm"
+        href="https://www.npmjs.com/package/ngx-callout"
+        target="_blank"
+        rel="noopener"
+      >npm</a>
+      <button
+        type="button"
+        class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center justify-content-center"
+        style="width: 34px; height: 31px"
+        (click)="dark.set(!dark())"
+        [attr.aria-label]="dark() ? 'Switch to light mode' : 'Switch to dark mode'"
+        [attr.aria-pressed]="dark()"
+      >
+        @if (dark()) {
+          <!-- Sun -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+          </svg>
+        } @else {
+          <!-- Moon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+          </svg>
+        }
+      </button>
+    </div>
+  </div>
+</nav>
+
 <main
   class="container py-5"
   style="max-width: 1100px; --ngx-callout-surface: var(--bs-body-bg); --ngx-callout-ink: var(--bs-body-color)"
@@ -132,16 +214,6 @@
             </div>
           </fieldset>
 
-          <fieldset class="vstack gap-2">
-            <legend class="small fw-semibold text-uppercase text-body-secondary mb-1">Page</legend>
-            <div class="form-check mb-0">
-              <input id="f-dark" name="dark" type="checkbox" class="form-check-input" [(ngModel)]="dark" />
-              <label class="form-check-label font-monospace small" for="f-dark">
-                Dark mode <span class="text-body-secondary">· Bootstrap data-bs-theme</span>
-              </label>
-            </div>
-          </fieldset>
-
           <div>
             <button type="button" class="btn btn-sm btn-outline-secondary" (click)="reset()">Reset</button>
           </div>
@@ -150,7 +222,8 @@
     </div>
 
     <!-- Preview and code -->
-    <div class="col-lg-8 sticky-lg-top" style="top: 1rem">
+    <!-- top offset keeps the preview below the sticky navbar -->
+    <div class="col-lg-8 sticky-lg-top" style="top: 5rem; z-index: 1">
       <div class="vstack gap-3">
         <div class="card shadow-sm" aria-label="Preview">
           <div class="card-body p-4">
@@ -231,10 +304,13 @@
   }
 
   <footer class="border-top mt-5 pt-4 d-flex flex-wrap justify-content-center align-items-center gap-2 small text-body-secondary">
-    <span>ngx-callout <code class="text-body bg-body-secondary px-2 rounded">v{{ version }}</code></span>
+    <code class="text-body bg-body-secondary px-2 rounded">v{{ version }}</code>
     <span aria-hidden="true">·</span>
-    <span>MIT license</span>
+    <span>MIT License</span>
     <span aria-hidden="true">·</span>
-    <a class="link-primary text-decoration-none" href="https://github.com/vishaalsharmaa/ngx-callout" target="_blank" rel="noopener">GitHub</a>
+    <span>
+      Maintained by
+      <a class="link-primary text-decoration-none" href="https://github.com/vishaalsharmaa" target="_blank" rel="noopener">vishaalsharmaa</a>
+    </span>
   </footer>
 </main>
