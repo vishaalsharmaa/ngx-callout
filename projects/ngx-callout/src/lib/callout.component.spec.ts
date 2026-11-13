@@ -189,3 +189,110 @@ describe('provideCallout', () => {
     expect(el.style.getPropertyValue('--ngx-callout-accent')).toBe('navy');
   });
 });
+
+@Component({
+  imports: [NgxCallout],
+  template: `
+    <ngx-callout
+      id="acc"
+      heading="Details"
+      [fullWidth]="fullWidth()"
+      [accordionVisible]="accordion()"
+      [defaultOpen]="defaultOpen()"
+      (openChange)="events.push($event)"
+    >
+      Hidden body
+    </ngx-callout>
+  `,
+})
+class AccordionHostComponent {
+  fullWidth = signal(true);
+  accordion = signal(true);
+  defaultOpen = signal(false);
+  events: boolean[] = [];
+}
+
+describe('fullWidth', () => {
+  it('fills the parent by default and fits its content when false', async () => {
+    const { fixture, el } = await render(AccordionHostComponent);
+    expect(el.classList.contains('ngx-callout--fit')).toBe(false);
+    fixture.componentInstance.fullWidth.set(false);
+    await fixture.whenStable();
+    expect(el.classList.contains('ngx-callout--fit')).toBe(true);
+  });
+});
+
+describe('accordion', () => {
+  it('shows no toggle button and keeps content open when accordionVisible is off', async () => {
+    const { el } = await render(BareHostComponent);
+    expect(el.querySelector('.ngx-callout__toggle')).toBeNull();
+    expect(el.classList.contains('ngx-callout--open')).toBe(true);
+  });
+
+  it('starts collapsed by default, with an accessible toggle button', async () => {
+    const { el } = await render(AccordionHostComponent);
+    const button = el.querySelector('#acc-toggle') as HTMLButtonElement;
+    expect(button).toBeTruthy();
+    expect(button.getAttribute('aria-expanded')).toBe('false');
+    expect(button.getAttribute('aria-controls')).toBe('acc-content');
+    expect(button.getAttribute('aria-label')).toBe('Show details');
+    expect(el.classList.contains('ngx-callout--open')).toBe(false);
+    expect(el.querySelector('#acc-content')?.textContent?.trim()).toBe('Hidden body');
+  });
+
+  it('expands and collapses on click and emits openChange', async () => {
+    const { fixture, el } = await render(AccordionHostComponent);
+    const button = el.querySelector('#acc-toggle') as HTMLButtonElement;
+
+    button.click();
+    await fixture.whenStable();
+    expect(button.getAttribute('aria-expanded')).toBe('true');
+    expect(button.getAttribute('aria-label')).toBe('Hide details');
+    expect(el.classList.contains('ngx-callout--open')).toBe(true);
+
+    button.click();
+    await fixture.whenStable();
+    expect(button.getAttribute('aria-expanded')).toBe('false');
+    expect(fixture.componentInstance.events).toEqual([true, false]);
+  });
+
+  it('starts expanded when defaultOpen is true, and follows later changes to it', async () => {
+    const { fixture, el } = await render(AccordionHostComponent);
+    fixture.componentInstance.defaultOpen.set(true);
+    await fixture.whenStable();
+    expect(el.classList.contains('ngx-callout--open')).toBe(true);
+    fixture.componentInstance.defaultOpen.set(false);
+    await fixture.whenStable();
+    expect(el.classList.contains('ngx-callout--open')).toBe(false);
+  });
+
+  it('removes the button and shows the content when accordionVisible is turned off', async () => {
+    const { fixture, el } = await render(AccordionHostComponent);
+    fixture.componentInstance.accordion.set(false);
+    await fixture.whenStable();
+    expect(el.querySelector('.ngx-callout__toggle')).toBeNull();
+    expect(el.classList.contains('ngx-callout--open')).toBe(true);
+  });
+});
+
+describe('provideCallout accordion options', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideCallout({
+          fullWidth: false,
+          accordionVisible: true,
+          defaultOpen: true,
+          accordionLabels: { collapse: 'Weniger anzeigen' },
+        }),
+      ],
+    });
+  });
+
+  it('applies app-wide width, accordion and label defaults', async () => {
+    const { el } = await render(BareHostComponent);
+    expect(el.classList.contains('ngx-callout--fit')).toBe(true);
+    expect(el.classList.contains('ngx-callout--open')).toBe(true);
+    expect(el.querySelector('.ngx-callout__toggle')?.getAttribute('aria-label')).toBe('Weniger anzeigen');
+  });
+});

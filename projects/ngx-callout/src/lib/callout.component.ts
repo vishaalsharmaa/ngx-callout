@@ -6,6 +6,8 @@ import {
   contentChild,
   inject,
   input,
+  linkedSignal,
+  output,
 } from '@angular/core';
 import { MessageState, toMessageState } from './message-state.enum';
 import { NGX_CALLOUT_CONFIG } from './callout.config';
@@ -21,6 +23,7 @@ export interface CalloutElementIds {
   heading: string;
   subheading: string;
   content: string;
+  toggle: string;
 }
 
 /**
@@ -46,6 +49,9 @@ export interface CalloutElementIds {
     '[attr.aria-label]': 'resolvedAriaLabel()',
     '[class.ngx-callout--outline]': 'outline()',
     '[class.ngx-callout--rounded]': 'rounded()',
+    '[class.ngx-callout--fit]': '!fullWidth()',
+    '[class.ngx-callout--accordion]': 'accordionVisible()',
+    '[class.ngx-callout--open]': 'isOpen()',
     '[style]': 'colorVars()',
   },
 })
@@ -85,6 +91,34 @@ export class NgxCallout {
   /** Color overrides for this callout only. Applied on top of `provideCallout({ colors })`. */
   readonly colors = input<CalloutColors | null | undefined>(undefined);
 
+  /**
+   * `true` (default): the callout fills the full width of its parent.
+   * `false`: it is only as wide as its content (heading, sub-heading, body), up to the parent's width.
+   */
+  readonly fullWidth = input(this.config.fullWidth, { transform: booleanAttribute });
+
+  /**
+   * Adds an up/down arrow button that expands and collapses the projected content.
+   * The heading and sub-heading always stay visible.
+   */
+  readonly accordionVisible = input(this.config.accordionVisible, { transform: booleanAttribute });
+
+  /** Whether the collapsible content starts expanded. Only used when `accordionVisible` is on. */
+  readonly defaultOpen = input(this.config.defaultOpen, { transform: booleanAttribute });
+
+  /** Emits `true` when the content is expanded and `false` when it is collapsed. */
+  readonly openChange = output<boolean>();
+
+  /** Current expanded state. Starts from `defaultOpen` and resets if `defaultOpen` changes. */
+  private readonly expanded = linkedSignal(() => this.defaultOpen());
+
+  /** Whether the projected content is visible: always when there is no accordion. */
+  readonly isOpen = computed(() => !this.accordionVisible() || this.expanded());
+
+  protected readonly toggleLabel = computed(() =>
+    this.isOpen() ? this.config.accordionLabels.collapse : this.config.accordionLabels.expand,
+  );
+
   private readonly projectedHeading = contentChild(NgxCalloutHeading);
 
   protected readonly stateLabel = computed(() => this.config.labels[this.type()]);
@@ -99,8 +133,30 @@ export class NgxCallout {
       heading: `${id}-heading`,
       subheading: `${id}-subheading`,
       content: `${id}-content`,
+      toggle: `${id}-toggle`,
     };
   });
+
+  /** Expands the content (when `accordionVisible` is on). */
+  open(): void {
+    this.setOpen(true);
+  }
+
+  /** Collapses the content (when `accordionVisible` is on). */
+  close(): void {
+    this.setOpen(false);
+  }
+
+  /** Switches between expanded and collapsed (when `accordionVisible` is on). */
+  toggle(): void {
+    this.setOpen(!this.expanded());
+  }
+
+  private setOpen(value: boolean): void {
+    if (!this.accordionVisible() || this.expanded() === value) return;
+    this.expanded.set(value);
+    this.openChange.emit(value);
+  }
 
   protected readonly resolvedRole = computed(
     () => this.role() || (this.type() === MessageState.Error ? 'alert' : 'note'),

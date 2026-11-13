@@ -59,6 +59,11 @@
   border-radius: var(--ngx-callout-radius, 5px);
 }
 
+// fullWidth = false: only as wide as the content, never wider than the parent.
+:host(.ngx-callout--fit) {
+  width: fit-content;
+}
+
 :host([data-type='warning']) {
   --_type-accent: var(--ngx-callout-warning-accent, #d4a017);
 }
@@ -136,7 +141,93 @@
   }
 }
 
-.ngx-callout__heading + .ngx-callout__content,
-.ngx-callout__subheading + .ngx-callout__content {
-  margin-top: 4px;
+// Space between the heading lines and the content. Padding (not margin) so it
+// collapses together with the content.
+.ngx-callout__heading ~ .ngx-callout__collapse .ngx-callout__content,
+.ngx-callout__subheading ~ .ngx-callout__collapse .ngx-callout__content {
+  padding-top: 4px;
+}
+
+// Collapse wrapper
+// ----------------
+// Animating grid rows between 0fr and 1fr gives a smooth height transition
+// without measuring the content in script.
+.ngx-callout__collapse {
+  display: grid;
+  grid-template-rows: 1fr;
+
+  // No projected content: drop the wrapper so it adds no space.
+  &:has(> .ngx-callout__collapse-inner > .ngx-callout__content:empty) {
+    display: none;
+  }
+}
+
+.ngx-callout__collapse-inner {
+  min-height: 0;
+  min-width: 0;
+}
+
+:host(.ngx-callout--accordion) {
+  .ngx-callout__collapse {
+    transition:
+      grid-template-rows 0.22s ease,
+      visibility 0.22s;
+  }
+
+  .ngx-callout__collapse-inner {
+    overflow: hidden;
+  }
+}
+
+// Collapsed: no height, and hidden from screen readers and keyboard focus.
+:host(.ngx-callout--accordion:not(.ngx-callout--open)) .ngx-callout__collapse {
+  grid-template-rows: 0fr;
+  visibility: hidden;
+}
+
+// Expand / collapse button
+// ------------------------
+.ngx-callout__toggle {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9em;
+  height: 1.9em;
+  margin: -0.2em -0.35em 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--_icon);
+  font: inherit;
+  cursor: pointer;
+
+  svg {
+    width: 1.15em;
+    height: 1.15em;
+    display: block;
+    transition: transform 0.22s ease;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--_accent) 16%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--_border);
+    outline-offset: 1px;
+  }
+}
+
+// Arrow points down when collapsed, up when expanded.
+:host(.ngx-callout--open) .ngx-callout__toggle svg {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host(.ngx-callout--accordion) .ngx-callout__collapse,
+  .ngx-callout__toggle svg {
+    transition: none;
+  }
 }

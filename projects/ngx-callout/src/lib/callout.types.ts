@@ -27,6 +27,14 @@ export type CalloutColorMap = Partial<Record<MessageState, CalloutColors>>;
 /** Screen-reader names for each state, used for the icon and the default `aria-label`. */
 export type CalloutStateLabels = Record<MessageState, string>;
 
+/** Screen-reader names for the expand/collapse button. */
+export interface CalloutAccordionLabels {
+  /** Read when the content is collapsed and the button will open it. */
+  expand: string;
+  /** Read when the content is open and the button will close it. */
+  collapse: string;
+}
+
 /** Maps each `CalloutColors` field to the CSS custom property it sets. */
 export const CALLOUT_COLOR_VARS: Readonly<Record<keyof CalloutColors, string>> = {
   accent: '--ngx-callout-accent',

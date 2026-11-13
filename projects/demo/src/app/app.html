@@ -193,6 +193,36 @@
           </fieldset>
 
           <fieldset class="vstack gap-2">
+            <legend class="small fw-semibold text-uppercase text-body-secondary mb-1">Layout</legend>
+
+            <div class="form-check mb-0">
+              <input id="f-full-width" name="fullWidth" type="checkbox" class="form-check-input" [(ngModel)]="fullWidth" />
+              <label class="form-check-label font-monospace small" for="f-full-width">
+                fullWidth <span class="text-body-secondary">· 100% of parent</span>
+              </label>
+            </div>
+            <div class="form-check mb-0">
+              <input id="f-accordion" name="accordionVisible" type="checkbox" class="form-check-input" [(ngModel)]="accordionVisible" />
+              <label class="form-check-label font-monospace small" for="f-accordion">
+                accordionVisible <span class="text-body-secondary">· expand / collapse</span>
+              </label>
+            </div>
+            <div class="form-check mb-0">
+              <input
+                id="f-default-open"
+                name="defaultOpen"
+                type="checkbox"
+                class="form-check-input"
+                [(ngModel)]="defaultOpen"
+                [disabled]="!accordionVisible()"
+              />
+              <label class="form-check-label font-monospace small" for="f-default-open">
+                defaultOpen <span class="text-body-secondary">· starts expanded</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="vstack gap-2">
             <legend class="small fw-semibold text-uppercase text-body-secondary mb-1">Accessibility</legend>
 
             <div>
@@ -237,9 +267,18 @@
               [rounded]="rounded()"
               [colors]="colors()"
               [ariaLabel]="ariaLabel()"
+              [fullWidth]="fullWidth()"
+              [accordionVisible]="accordionVisible()"
+              [defaultOpen]="defaultOpen()"
+              (openChange)="lastOpenChange.set($event)"
             >
               @if (showContent()) {{{ content() }}}
             </ngx-callout>
+            @if (accordionVisible()) {
+              <p class="small text-body-secondary font-monospace mt-3 mb-0">
+                (openChange): {{ lastOpenChange() ?? '—' }}
+              </p>
+            }
           </div>
         </div>
 

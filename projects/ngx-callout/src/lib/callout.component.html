@@ -46,5 +46,36 @@
   @if (subheading()) {
     <div class="ngx-callout__subheading" [id]="ids().subheading">{{ subheading() }}</div>
   }
-  <div class="ngx-callout__content" [id]="ids().content"><ng-content /></div>
+  <!-- Collapse wrapper: animates height when the accordion opens or closes. -->
+  <div class="ngx-callout__collapse">
+    <div class="ngx-callout__collapse-inner">
+      <div class="ngx-callout__content" [id]="ids().content"><ng-content /></div>
+    </div>
+  </div>
 </div>
+
+@if (accordionVisible()) {
+  <button
+    type="button"
+    class="ngx-callout__toggle"
+    [id]="ids().toggle"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-controls]="ids().content"
+    [attr.aria-label]="toggleLabel()"
+    [attr.title]="toggleLabel()"
+    (click)="toggle()"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.25"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  </button>
+}

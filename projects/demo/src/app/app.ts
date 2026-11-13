@@ -55,6 +55,11 @@ export class App {
   protected readonly outline = signal(false);
   protected readonly rounded = signal(false);
   protected readonly customColor = signal(false);
+  protected readonly fullWidth = signal(true);
+  protected readonly accordionVisible = signal(false);
+  protected readonly defaultOpen = signal(false);
+  /** Last value the callout emitted through (openChange); null until the first toggle. */
+  protected readonly lastOpenChange = signal<boolean | null>(null);
   protected readonly accent = signal(DEFAULT_ACCENTS[PLAYGROUND_START.type]);
   protected readonly calloutId = signal('my-callout');
   protected readonly ariaLabel = signal('');
@@ -86,6 +91,11 @@ export class App {
     if (!this.showIcon()) lines.push(`[showIcon]="false"`);
     if (this.outline()) lines.push('outline');
     if (this.rounded()) lines.push('rounded');
+    if (!this.fullWidth()) lines.push(`[fullWidth]="false"`);
+    if (this.accordionVisible()) {
+      lines.push('accordionVisible');
+      if (this.defaultOpen()) lines.push('defaultOpen');
+    }
     if (this.customColor()) lines.push(`[colors]="{ accent: '${this.accent()}' }"`);
     if (this.calloutId()) lines.push(`id="${attr(this.calloutId())}"`);
     if (this.ariaLabel()) lines.push(`ariaLabel="${attr(this.ariaLabel())}"`);
@@ -111,6 +121,10 @@ export class App {
     this.outline.set(false);
     this.rounded.set(false);
     this.customColor.set(false);
+    this.fullWidth.set(true);
+    this.accordionVisible.set(false);
+    this.defaultOpen.set(false);
+    this.lastOpenChange.set(null);
     this.accent.set(DEFAULT_ACCENTS[PLAYGROUND_START.type]);
     this.calloutId.set('my-callout');
     this.ariaLabel.set('');
